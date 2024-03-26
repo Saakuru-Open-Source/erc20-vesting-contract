@@ -1,5 +1,5 @@
 {
-  "name": "skr-token",
+  "name": "erc20-vesting-contract",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
