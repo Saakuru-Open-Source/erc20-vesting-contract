@@ -32,12 +32,19 @@ contract VestingContract is ReentrancyGuard, Context, Ownable {
 
   address public recoveryWallet;
 
+  bool public paused;
+
   constructor(IERC20 _token, address _owner, address _recoveryWallet) {
     token = _token;
     require(_owner != address(0), "Owner cannot be empty");
     transferOwnership(_owner);
     require(_recoveryWallet != address(0), "Recovery wallet cannot be empty");
     recoveryWallet = _recoveryWallet;
+    paused = true;
+  }
+
+  function setStatus(bool _paused) external onlyOwner {
+    paused = _paused;
   }
 
   // Create vesting schedule
@@ -102,6 +109,7 @@ contract VestingContract is ReentrancyGuard, Context, Ownable {
   }
 
   function withdraw() external nonReentrant {
+    require(paused == false, "Claiming not available yet");
     Schedule memory schedule = vestingSchedule[_msgSender()];
     require(schedule.amount > 0, "There is no schedule currently in flight");
 
